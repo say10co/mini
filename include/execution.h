@@ -9,6 +9,6 @@
       
       
       
-        int     execut(t_parser *list);
+        int     execut(t_list *list);
         
     #endif

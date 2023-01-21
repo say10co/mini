@@ -73,9 +73,9 @@ int main()
     
        cmd = fill_command(tokens);
        
-        print_cmd(cmd);
+        //print_cmd(cmd);
             //execution//
-         //   execut(cmd);
+           execut(cmd);
 
 	   // print_tokens(tokens);
            // parser(tokens);
