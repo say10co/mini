@@ -40,62 +40,55 @@ char **realloc_cmd(char **cmd,char *str)
 	}
 	return (cmd);
 }
-t_list *fill_command(t_list *tokens)
+t_parser *init_content(t_parser *content)
 {
-	t_list	*cmd_list;
-	t_parser *content;
-	t_token		*curr;
-	int flag = 0;
-
-	cmd_list = NULL;
-	
 	content = (t_parser *)malloc(sizeof(t_parser));
 	content->in_fd = 0;
 	content->out_fd = 1;
 	content->cmd = (char **)malloc(sizeof(char * ) * 2);
 	content->cmd[0] = NULL;
 	content->cmd[1] = NULL;
+	return (content);
+}
+t_list *fill_command(t_list *tokens)
+{
+	t_list	*cmd_list;
+	t_parser *tmp;
+	t_token		*curr;
+
+	tmp = NULL;
+	cmd_list = NULL;
+	tmp = init_content(tmp);
 	
 	curr = (t_token *) tokens->content;
 	
 	while(curr->type != TOKEN_EOF)
 	{
 		if(curr->type == TOKEN_STRING)
-			content->cmd = realloc_cmd(content->cmd,curr->value);
+			tmp->cmd = realloc_cmd(tmp->cmd,curr->value);
 		else if(curr->type == TOKEN_REDIRECT)
 		{
 			tokens = tokens->next;
 			curr = (t_token *) tokens->content;
-	
 			if(curr->type == TOKEN_STRING )
-				content->out_fd = open(curr->value,O_CREAT | O_RDWR , 0664);
+				tmp->out_fd = open(curr->value,O_CREAT | O_RDWR , 0664);
 		}
 		else if(curr->type == TOKEN_LREDIRECT)
 		{
 			tokens = tokens->next;
 			curr = (t_token *) tokens->content;
 			if(curr->type == TOKEN_STRING )
-				content->in_fd = open(curr->value,O_CREAT | O_RDWR, 0664);
+				tmp->in_fd = open(curr->value,O_CREAT | O_RDWR, 0664);
 		}
 		else if(curr->type == TOKEN_PIPE)
 		{
-			 flag = 1;
-			  ft_lstadd_back(&cmd_list, ft_lstnew(content));
-			content = (t_parser *)malloc(sizeof(t_parser));
-			content->in_fd = 0;
-			content->out_fd = 1;
-		
-			content->cmd = (char **)malloc(sizeof(char * ) * 2);
-			content->cmd[0] = NULL;
-			content->cmd[1] = NULL;
-	  
+			ft_lstadd_back(&cmd_list, ft_lstnew(tmp));
+			tmp = init_content(tmp);
 		}
-		
 		tokens = tokens->next;
 		curr = (t_token *) tokens->content;
-
 	}
-	 ft_lstadd_back(&cmd_list, ft_lstnew(content));
+	 ft_lstadd_back(&cmd_list, ft_lstnew(tmp));
 
 	return (cmd_list);
 
@@ -147,19 +140,17 @@ char *string_parser(char *str)
 
 int check_syntax(t_list *tokens)
 {
-        // t_parser *cmd;
         t_token *curr;
         t_token *next;
-        //char **args;
+		char *temp_value;
+		char *str;
        
         curr = (t_token *) tokens->content;
         next = (t_token *) tokens->next->content;
-        
         if(curr->type == TOKEN_PIPE)
            return(printf("minishell: syntax error unexpected token `|'\n"));
         while(curr->type != TOKEN_EOF)
         {
-
             if(curr->type == TOKEN_PIPE && next->type == TOKEN_REDIRECT)
             {
                 curr = (t_token *) tokens->content;
@@ -167,12 +158,11 @@ int check_syntax(t_list *tokens)
             }
             else if(curr->type == TOKEN_STRING )
 			{
-				char *temp_value = curr->value;
-                char *str = string_parser(curr->value);
+				temp_value = curr->value;
+                str = string_parser(curr->value);
 				
 	    		if (str == NULL)
            			return(printf("minishell: syntax error unexpected token `\\n'\n"));
-
                 if (str != temp_value)
                 	free(temp_value);
 
@@ -181,7 +171,6 @@ int check_syntax(t_list *tokens)
             else if(curr->type != TOKEN_STRING && next->type != TOKEN_STRING)
                 return(printf("minishell: syntax error unexpected token `%s'\n",next->value));
             
-			//debug_print_token(curr);
           tokens = tokens->next;
           curr = (t_token *) tokens->content;
 		  if(curr->type != TOKEN_EOF)
