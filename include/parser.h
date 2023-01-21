@@ -7,7 +7,7 @@ typedef struct s_parser
     char    **cmd;
     int     in_fd;
     int    out_fd;
-    struct s_parser *next;
+   // struct s_parser *next;
 }t_parser;
 
 int check_syntax(t_list *tokens);

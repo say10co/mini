@@ -41,13 +41,13 @@ void print_cmd(t_list *list)
     t_parser *curr = (t_parser *)malloc(sizeof(t_parser ));
         while(list)
         {
-            curr = (t_parser *)list->content;
-            while(curr->cmd[i])
-            {
-                printf("im here\n");
-                printf("cmd [%d] = %s\n",i,curr->cmd[i]);
-                i++;
-            }
+               curr = (t_parser *)list->content;
+                i = 0;
+                while(curr->cmd[i])
+                {
+                    printf("cmd [%d] = %s\n",i,curr->cmd[i]);
+                    i++;
+                }
              printf("in_file =  %d && out_file = %d\n", curr->in_fd,curr->out_fd);
             list = list->next;
         }
@@ -73,9 +73,9 @@ int main()
     
        cmd = fill_command(tokens);
        
-        //print_cmd(cmd);
+        print_cmd(cmd);
             //execution//
-           execut(cmd);
+        //   execut(cmd);
 
 	   // print_tokens(tokens);
            // parser(tokens);

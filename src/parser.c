@@ -3,7 +3,12 @@
 #include "../include/lexer.h"
 #include "../include/parser.h"
 #include "../include/token.h"
-
+void ft_free(char **t)
+{
+	int i = -1;
+	while(t[++i])
+		free(t[i]);
+}
 char **realloc_cmd(char **cmd,char *str)
 {
 	char **tmp;
@@ -38,35 +43,21 @@ char **realloc_cmd(char **cmd,char *str)
 t_list *fill_command(t_list *tokens)
 {
 	t_list	*cmd_list;
-	t_list	*cmd;
-
 	t_parser *content;
-	
 	t_token		*curr;
-	t_token		*next;
-
 	int flag = 0;
 
 	cmd_list = NULL;
-	cmd = (t_list *)malloc(sizeof(t_list));
 	
-	cmd->content = (t_parser *)malloc(sizeof(t_parser));
-	content = (t_parser *)cmd->content;
-	
+	content = (t_parser *)malloc(sizeof(t_parser));
 	content->in_fd = 0;
 	content->out_fd = 1;
-	
-	curr = (t_token *) tokens->content;
-	if(!cmd)
-		return (NULL);
-	if(!cmd->content)
-		return (NULL);
-
 	content->cmd = (char **)malloc(sizeof(char * ) * 2);
 	content->cmd[0] = NULL;
 	content->cmd[1] = NULL;
 	
-	next = (t_token *) tokens->next->content;
+	curr = (t_token *) tokens->content;
+	
 	while(curr->type != TOKEN_EOF)
 	{
 		if(curr->type == TOKEN_STRING)
@@ -75,38 +66,39 @@ t_list *fill_command(t_list *tokens)
 		{
 			tokens = tokens->next;
 			curr = (t_token *) tokens->content;
-			content = (t_parser *)cmd->content;
-
+	
 			if(curr->type == TOKEN_STRING )
-				content->in_fd = open(curr->value,O_CREAT | O_RDWR , 0664);
+				content->out_fd = open(curr->value,O_CREAT | O_RDWR , 0664);
 		}
 		else if(curr->type == TOKEN_LREDIRECT)
 		{
 			tokens = tokens->next;
 			curr = (t_token *) tokens->content;
-			content = (t_parser *)cmd->content;
 			if(curr->type == TOKEN_STRING )
-				content->out_fd = open(curr->value,O_CREAT | O_RDWR, 0664);
+				content->in_fd = open(curr->value,O_CREAT | O_RDWR, 0664);
 		}
 		else if(curr->type == TOKEN_PIPE)
 		{
 			 flag = 1;
 			  ft_lstadd_back(&cmd_list, ft_lstnew(content));
+			content = (t_parser *)malloc(sizeof(t_parser));
+			content->in_fd = 0;
+			content->out_fd = 1;
+		
+			content->cmd = (char **)malloc(sizeof(char * ) * 2);
+			content->cmd[0] = NULL;
+			content->cmd[1] = NULL;
+	  
 		}
+		
 		tokens = tokens->next;
 		curr = (t_token *) tokens->content;
-		content = (t_parser *)cmd->content;
-		//  if(curr->type != TOKEN_EOF)
-		//  {
-		//  	next = (t_token *) tokens->next->content;
-		//  }
-	}
-			cmd->next = NULL;
 
-	if(flag)
-		return (cmd_list);
-	else 
-		return cmd;
+	}
+	 ft_lstadd_back(&cmd_list, ft_lstnew(content));
+
+	return (cmd_list);
+
 }
 char *string_parser(char *str)
 {
