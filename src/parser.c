@@ -66,12 +66,19 @@ t_list *fill_command(t_list *tokens)
 	{
 		if(curr->type == TOKEN_STRING)
 			tmp->cmd = realloc_cmd(tmp->cmd,curr->value);
+		else if(curr->type == TOKEN_APPEND)
+		{
+			tokens = tokens->next;
+			curr = (t_token *) tokens->content;
+			if(curr->type == TOKEN_STRING )
+				tmp->out_fd = open(curr->value,O_CREAT | O_RDWR | O_APPEND, 0664);
+		}
 		else if(curr->type == TOKEN_REDIRECT)
 		{
 			tokens = tokens->next;
 			curr = (t_token *) tokens->content;
 			if(curr->type == TOKEN_STRING )
-				tmp->out_fd = open(curr->value,O_CREAT | O_RDWR , 0664);
+				tmp->out_fd = open(curr->value,O_TRUNC| O_CREAT | O_RDWR  , 0664);
 		}
 		else if(curr->type == TOKEN_LREDIRECT)
 		{

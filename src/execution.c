@@ -44,17 +44,18 @@ int builtins(t_list *list)
 {
 	t_parser *curr = (t_parser *)list->content;
 
+
 	if(!ft_strncmp(curr->cmd[0],"echo",5)) 
 		echo(curr);
 	else if(!ft_strncmp(curr->cmd[0],"cd",3)) 
 		echo(curr);
 	else if(!ft_strncmp(curr->cmd[0],"pwd",4)) 
 		echo(curr);
-	else if(!ft_strncmp(curr->cmd[0],"export",7)) 
+	else if(!ft_strncmp(curr->cmd[0],"export",7))
 		echo(curr);
-	else if(!ft_strncmp(curr->cmd[0],"unset",6)) 
+	else if(!ft_strncmp(curr->cmd[0],"unset",6))
 		echo(curr);
-	else if(!ft_strncmp(curr->cmd[0],"env",4)) 
+	else if(!ft_strncmp(curr->cmd[0],"env",4))
 		echo(curr);
 	else if(!ft_strncmp(curr->cmd[0],"exit",5)) 
 		echo(curr);
@@ -66,6 +67,7 @@ int execut(t_list *list)
 {
 	if(!builtins(list))
 			return 0;
+	else
 
 	return 0;
 }
