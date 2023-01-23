@@ -2,7 +2,7 @@
 #include "../include/parser.h"
 #include "../include/token.h"
 #include "../include/execution.h"
-
+/*
 void	echo (t_parser *list)
 {
 	int	lp;
@@ -38,7 +38,7 @@ void	echo (t_parser *list)
 	}
 	if (!lp)
 		printf("\n");
-}
+}*/
 
 int builtins(t_list *list)
 {
@@ -68,6 +68,7 @@ int execut(t_list *list)
 	if(!builtins(list))
 			return 0;
 	else
+		start(list);
 
 	return 0;
 }
