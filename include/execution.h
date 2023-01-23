@@ -5,7 +5,8 @@
     
         //builtins//
         void	echo (t_parser *list);
-      
+		int	start(t_list *list);
+		void	execute(t_list *cmds);
       
       
       
