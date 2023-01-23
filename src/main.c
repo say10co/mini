@@ -63,6 +63,8 @@ int main()
     {
             
          str = readline("➜ minishell ");
+        if(!(str[0] != '\0'))
+            continue;
          add_history(str);
          tokens = lexer(str);
         if(check_syntax(tokens))
@@ -70,12 +72,13 @@ int main()
             deallocate(tokens);
             continue; 
         }
-    
+
        cmd = fill_command(tokens);
        
        // print_cmd(cmd);
             //execution//
-           execut(cmd);
+          // execut(cmd);
+
 
 	   // print_tokens(tokens);
            // parser(tokens);

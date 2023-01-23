@@ -20,7 +20,6 @@ t_list *lexer(char *src)
     t_lexer lexer;
     t_token *token;
     t_list *list ;
-    
     init_lexer(&lexer,src);
     list = NULL;
     while(lexer.c != '\0')

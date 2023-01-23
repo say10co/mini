@@ -151,9 +151,11 @@ int check_syntax(t_list *tokens)
         t_token *next;
 		char *temp_value;
 		char *str;
-       
+	  // if(!tokens)
+		//	return 0;
         curr = (t_token *) tokens->content;
         next = (t_token *) tokens->next->content;
+	   
         if(curr->type == TOKEN_PIPE)
            return(printf("minishell: syntax error unexpected token `|'\n"));
         while(curr->type != TOKEN_EOF)
