@@ -4,7 +4,7 @@ SRC = src/main.c src/lexer.c src/token.c src/parser.c src/execution.c src/exe.c
 
 OBJ = ${SRC:%.c=%.o}
 
-FLAGS =  -Wall -Wextra -Werror -fsanitize=address
+FLAGS =  -Wall -Wextra -Werror  #-fsanitize=address
 
 READLINE = -lreadline
 

@@ -77,7 +77,7 @@ int main()
        
        // print_cmd(cmd);
             //execution//
-          // execut(cmd);
+           execut(cmd);
 
 
 	   // print_tokens(tokens);

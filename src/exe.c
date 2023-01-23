@@ -6,7 +6,7 @@
 /*   By: yomari <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 00:17:32 by yomari            #+#    #+#             */
-/*   Updated: 2023/01/23 04:44:14 by yomari           ###   ########.fr       */
+/*   Updated: 2023/01/23 23:23:04 by yomari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include"../lib_ft/libft.h"
@@ -86,7 +86,7 @@ void	execute(t_list *cmds)
 	int	pid[size];
 	int	i;
 	int	j;
-	//char buffer[100];
+//	char buffer[100];
 	t_parser *tmp;
 	
 	i = 0;
@@ -115,28 +115,31 @@ void	execute(t_list *cmds)
 			{
 				if ( i > 0)
 				{
-					printf("hello %d \n", i);
+					//printf("hello before %d \n", i);
 					dup2(fd[i][0], STDIN_FILENO);
 				}
 				dup2(fd[i + 1][1], STDOUT_FILENO );
+					//printf("hello after %d \n", i);
 			}
-			else if (!cmds->next)
+			if (!cmds->next)
 			{
 				//	printf("hello eee %d \n", i);
 				dup2(fd[i][0], STDIN_FILENO);
+			//	dup2(fd[size][1], STDOUT_FILENO );
 			//	read(fd[i][0], buffer, 100);
-			//		printf(" %s \n", buffer);
+			//		printf("  hada li bit %s\n whada kifach blano \n", buffer);
 			}
 			}
 			execve(tmp->cmd[0], tmp->cmd, NULL);
 		}
-		//close(fd[i][0]);
-		//close(fd[i + 1][1]);
+		close(fd[i][0]);
+		if (i + 1 != size)
+			close(fd[i + 1][1]);
 		cmds= cmds->next;
 		i++;
 	}
-		while (wait(NULL) != -1)
-			;
+		while (i-- > 0)
+			wait(NULL);
 }
 int	start(t_list *list)
 {
